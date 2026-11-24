@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SecurePipeline — build file (Maven).
+     One dependency does the heavy lifting: spring-boot-starter-web
+     (embedded Tomcat + Jackson JSON). spring-boot-starter-test is
+     test-only. No database: notes live in memory, so the app runs
+     anywhere with just `java -jar`. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Spring Boot 4.2.0 (Nov 2026): chosen because the Trivy scan of the
+         original 3.3.5 build found 42 HIGH/CRITICAL vulnerabilities, several
+         only fixed in Framework 7 / Tomcat 11.0.25+ / Jackson 2.18.11+.
+         See README "When the pipeline blocked a build" for the full story. -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.2.0</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.sillymedia</groupId>
+    <artifactId>secure-pipeline</artifactId>
+    <version>0.1.0</version>
+    <name>secure-pipeline</name>
+    <description>A tiny Spring Boot notes app put through a real CI/CD pipeline with security scanning.</description>
+
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- Web: embedded Tomcat, REST controllers, JSON (Jackson). -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Test-only: JUnit 5, Mockito, MockMvc, AssertJ. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Packages a runnable "fat jar": java -jar target/secure-pipeline-0.1.0.jar -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
